@@ -8,7 +8,7 @@ import {
 import {
   TbSearch, TbArrowRight, TbLocation, TbTemperature,
   TbEye, TbWind, TbDroplet, TbGauge, TbSparkles,
-  TbSunrise, TbSunset, TbRefresh, TbStar, TbClothing,
+  TbSunrise, TbSunset, TbRefresh, TbStar, TbShirt,
 } from 'react-icons/tb'
 import { PiThermometerHot, PiCoatHanger, PiWarningCircle } from 'react-icons/pi'
 import { RiExchangeLine } from 'react-icons/ri'
@@ -637,7 +637,7 @@ export default function App() {
                     <SwiperSlide key={i}>
                       <div className="glass-light rounded-2xl p-4 flex flex-col items-center gap-3">
                         <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider">{getDayName(d.dt, lang)}</span>
-                        <WeatherIcon condition={d.weather[0]?.main} size={28} style={{ color: advice.accent }} />
+                        <WeatherIcon condition={d.weather[0]?.main} size={28} style={{ color: accentColor }} />
                         <span className="text-white font-bold text-lg">{Math.round(d.main.temp)}°</span>
                       </div>
                     </SwiperSlide>
