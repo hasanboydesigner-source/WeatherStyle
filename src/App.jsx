@@ -419,21 +419,21 @@ export default function App() {
               <WiDaySunny size={22} className="text-black" />
             </div>
             <div>
-              <p className="font-bold text-white text-sm tracking-tight leading-none">WeatherStyle</p>
+              <p className="font-bold text-white text-sm tracking-tight leading-none">WeatherStyle v2.2</p>
               <p className="text-white/40 text-[10px] tracking-wider uppercase">{t.subtitle}</p>
             </div>
-          </div>
 
-          <div className="flex gap-2">
-            {['uz', 'en', 'ru'].map(l => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
-                className={`w-8 h-8 rounded-full text-[10px] font-bold transition-all ${lang === l ? 'bg-white text-black' : 'bg-white/10 text-white/40 hover:bg-white/20'}`}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
+            <div className="flex gap-1.5 ml-2">
+              {['uz', 'en', 'ru'].map(l => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  className={`px-2 py-0.5 rounded-lg text-[9px] font-bold transition-all ${lang === l ? 'bg-white text-black' : 'bg-white/10 text-white/40 hover:bg-white/20'}`}
+                >
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
           </div>
 
           <button
