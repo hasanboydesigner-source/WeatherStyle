@@ -422,30 +422,32 @@ export default function App() {
               <p className="font-bold text-white text-sm tracking-tight leading-none">WeatherStyle</p>
               <p className="text-white/40 text-[10px] tracking-wider uppercase">{t.subtitle}</p>
             </div>
+          </div>
 
-            <div className="relative ml-2">
+          <div className="flex items-center gap-2">
+            <div className="relative">
               <select
                 value={lang}
                 onChange={(e) => setLang(e.target.value)}
-                className="appearance-none bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[10px] font-bold py-1 px-3 pr-6 rounded-lg transition-all focus:outline-none focus:ring-1 focus:ring-white/30 cursor-pointer backdrop-blur-md shadow-sm"
+                className="appearance-none bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[10px] font-bold py-2.5 px-3 pr-8 rounded-2xl transition-all focus:outline-none focus:ring-1 focus:ring-white/30 cursor-pointer backdrop-blur-md shadow-sm"
               >
                 <option value="uz" className="bg-slate-900 border-none">UZ</option>
                 <option value="en" className="bg-slate-900 border-none">EN</option>
                 <option value="ru" className="bg-slate-900 border-none">RU</option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center px-0.5 text-white/40">
-                <svg className="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center px-0.5 text-white/40">
+                <svg className="fill-current h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
               </div>
             </div>
-          </div>
 
-          <button
-            onClick={toggleUnit}
-            className="glass-lighter flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-white/70 hover:text-white text-xs font-semibold transition-all hover:scale-105"
-          >
-            <RiExchangeLine size={14} />
-            °{unit === 'metric' ? 'C' : 'F'}
-          </button>
+            <button
+              onClick={toggleUnit}
+              className="glass-lighter flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl text-white/70 hover:text-white text-xs font-semibold transition-all hover:scale-105"
+            >
+              <RiExchangeLine size={14} />
+              °{unit === 'metric' ? 'C' : 'F'}
+            </button>
+          </div>
         </header>
 
         {/* ── Search ────────────────────────────────────── */}
