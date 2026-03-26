@@ -13,6 +13,8 @@ import {
 import { PiThermometerHot, PiCoatHanger, PiWarningCircle } from 'react-icons/pi'
 import { RiExchangeLine } from 'react-icons/ri'
 import './index.css'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
 
 const API_KEY = '2f5a3c0bf2e6ec975e05919e1fe9e816'
 
@@ -613,22 +615,34 @@ export default function App() {
               </div>
             )}
 
-            {/* ── 5-day forecast ─────────────────────────── */}
+            {/* ── 7-day forecast ─────────────────────────── */}
             {forecast.length > 0 && (
               <div className="glass-light rounded-3xl p-5 animate-fade-up" style={{ animationDelay: '220ms' }}>
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">{t.forecastTitle}</p>
                   <TbRefresh size={14} className="text-white/30" />
                 </div>
-                <div className="flex gap-2.5 overflow-x-auto forecast-scroll pb-1 snap-x snap-mandatory">
+                
+                <Swiper
+                  spaceBetween={10}
+                  slidesPerView={4.2}
+                  breakpoints={{
+                    320: { slidesPerView: 3.2 },
+                    480: { slidesPerView: 4.2 },
+                    640: { slidesPerView: 5.2 }
+                  }}
+                  className="forecast-swiper"
+                >
                   {forecast.map((d, i) => (
-                    <div key={i} className="flex-shrink-0 w-[84px] glass-light rounded-2xl p-4 flex flex-col items-center gap-3 snap-start">
-                      <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider">{getDayName(d.dt, lang)}</span>
-                      <WeatherIcon condition={d.weather[0]?.main} size={28} style={{ color: advice.accent }} />
-                      <span className="text-white font-bold text-lg">{Math.round(d.main.temp)}°</span>
-                    </div>
+                    <SwiperSlide key={i}>
+                      <div className="glass-light rounded-2xl p-4 flex flex-col items-center gap-3">
+                        <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider">{getDayName(d.dt, lang)}</span>
+                        <WeatherIcon condition={d.weather[0]?.main} size={28} style={{ color: advice.accent }} />
+                        <span className="text-white font-bold text-lg">{Math.round(d.main.temp)}°</span>
+                      </div>
+                    </SwiperSlide>
                   ))}
-                </div>
+                </Swiper>
               </div>
             )}
 
