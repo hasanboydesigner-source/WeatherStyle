@@ -423,16 +423,19 @@ export default function App() {
               <p className="text-white/40 text-[10px] tracking-wider uppercase">{t.subtitle}</p>
             </div>
 
-            <div className="flex gap-1.5 ml-2">
-              {['uz', 'en', 'ru'].map(l => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  className={`px-2 py-0.5 rounded-lg text-[9px] font-bold transition-all ${lang === l ? 'bg-white text-black' : 'bg-white/10 text-white/40 hover:bg-white/20'}`}
-                >
-                  {l.toUpperCase()}
-                </button>
-              ))}
+            <div className="relative ml-2">
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value)}
+                className="appearance-none bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[10px] font-bold py-1 px-3 pr-6 rounded-lg transition-all focus:outline-none focus:ring-1 focus:ring-white/30 cursor-pointer backdrop-blur-md shadow-sm"
+              >
+                <option value="uz" className="bg-slate-900 border-none">UZ</option>
+                <option value="en" className="bg-slate-900 border-none">EN</option>
+                <option value="ru" className="bg-slate-900 border-none">RU</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center px-0.5 text-white/40">
+                <svg className="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+              </div>
             </div>
           </div>
 
