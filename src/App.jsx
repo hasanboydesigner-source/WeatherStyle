@@ -8,7 +8,7 @@ import {
 import {
   TbSearch, TbArrowRight, TbLocation, TbTemperature,
   TbEye, TbWind, TbDroplet, TbGauge, TbSparkles,
-  TbSunrise, TbSunset, TbRefresh, TbStar, TbShirt,
+  TbSunrise, TbSunset, TbRefresh, TbStar, TbShirt, TbArrowDownCircle,
 } from 'react-icons/tb'
 import { PiThermometerHot, PiCoatHanger, PiWarningCircle } from 'react-icons/pi'
 import { RiExchangeLine } from 'react-icons/ri'
@@ -280,9 +280,31 @@ export default function App() {
   const [visible, setVisible] = useState(false)
   const [unit, setUnit]       = useState('metric')
   const [lang, setLang]       = useState('uz')
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [showInstall, setShowInstall]   = useState(false)
   const inputRef = useRef(null)
 
   const t = translations[lang]
+
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+      setShowInstall(true)
+    }
+    window.addEventListener('beforeinstallprompt', handler)
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+    if (outcome === 'accepted') {
+      setShowInstall(false)
+      setDeferredPrompt(null)
+    }
+  }
 
   useEffect(() => {
     if (weather?.name) {
@@ -425,6 +447,16 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2">
+            {showInstall && (
+              <button
+                onClick={handleInstallClick}
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-[10px] font-bold transition-all hover:scale-105 border border-white/10"
+              >
+                <TbArrowDownCircle size={14} />
+                {lang === 'uz' ? 'O\'rnatish' : (lang === 'ru' ? 'Установить' : 'Install')}
+              </button>
+            )}
+
             <div className="relative">
               <select
                 value={lang}
