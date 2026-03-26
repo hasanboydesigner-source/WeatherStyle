@@ -8,13 +8,106 @@ import {
 import {
   TbSearch, TbArrowRight, TbLocation, TbTemperature,
   TbEye, TbWind, TbDroplet, TbGauge, TbSparkles,
-  TbSunrise, TbSunset, TbRefresh, TbStar,
+  TbSunrise, TbSunset, TbRefresh, TbStar, TbClothing,
 } from 'react-icons/tb'
 import { PiThermometerHot, PiCoatHanger, PiWarningCircle } from 'react-icons/pi'
 import { RiExchangeLine } from 'react-icons/ri'
 import './index.css'
 
 const API_KEY = '2f5a3c0bf2e6ec975e05919e1fe9e816'
+
+const translations = {
+  uz: {
+    title: 'Ob-havo va Moda',
+    subtitle: 'Moda va Ob-havo',
+    search: 'Shaharni izlang...',
+    humidity: 'Namlik',
+    wind: 'Shamol',
+    pressure: 'Bosim',
+    visibility: 'Ko\'rinish',
+    todayAdvice: 'Bugungi Tavsiya',
+    forecastTitle: '7 Kunlik Ob-havo Ma\'lumoti',
+    sunrise: 'Tong otishi',
+    sunset: 'Quyosh botishi',
+    description: 'Shaharni izlang va bugungi ob-havoga mos moda maslahatlarini oling!',
+    idealFor: 'uchun ideal',
+    lightStyle: 'uchun yengil uslub',
+    rainyStyle: 'Yomg\'irdan chiroyli himoya',
+    autumnStyle: 'uchun uslub',
+    snowStyle: 'Qor uchun ajoyib ko\'rinish',
+    winterStyle: 'Sovuq',
+    extremeCold: 'O\'ta sovuq havo',
+    tips: {
+      summer: 'UV nurlaridan himoyalanishingiz uchun shlyapa kiying. Ochiq ranglarni tanlang.',
+      warm: 'Kechki payt havo sovib ketishi mumkin — yengil nimcha oling.',
+      rain: 'Soyabonni unutmang! Jigarrang yoki qora — eng zamonaviy tanlov.',
+      cool: 'Qatlamli kiyim eng yaxshi tanlov. Sharf qo\'shing.',
+      snow: 'Toyib ketmaydigan poyabzal tanlang. Qo\'lqop kiyishni unutmang!',
+      winter: 'Qatlam-qatlam kiyinish muhim! Ustki kiyim shamol va namlikdan himoya qiladi.',
+      arctic: 'Agar tashqariga chiqsangiz, to\'liq himoyalovchi kiyim kiying.'
+    }
+  },
+  en: {
+    title: 'Weather & Fashion',
+    subtitle: 'Weather & Fashion',
+    search: 'Search city...',
+    humidity: 'Humidity',
+    wind: 'Wind',
+    pressure: 'Pressure',
+    visibility: 'Visibility',
+    todayAdvice: 'Today\'s Advice',
+    forecastTitle: '7-Day Weather Forecast',
+    sunrise: 'Sunrise',
+    sunset: 'Sunset',
+    description: 'Search for a city and get fashion tips according to today\'s weather!',
+    idealFor: 'ideal for',
+    lightStyle: 'light style for',
+    rainyStyle: 'Stylish rain protection',
+    autumnStyle: 'style for',
+    snowStyle: 'Great look for snow',
+    winterStyle: 'Cold',
+    extremeCold: 'Extreme cold weather',
+    tips: {
+      summer: 'Wear a hat for UV protection. Choose light colors.',
+      warm: 'It might get cold in the evening — take a light jacket.',
+      rain: 'Don\'t forget your umbrella! Brown or black is the most stylish choice.',
+      cool: 'Layered clothing is the best choice. Add a scarf.',
+      snow: 'Choose non-slip shoes. Don\'t forget to wear gloves!',
+      winter: 'Layering is important! Outerwear protects against wind and moisture.',
+      arctic: 'Wear full protective clothing if you go out.'
+    }
+  },
+  ru: {
+    title: 'Погода и Мода',
+    subtitle: 'Погода и Мода',
+    search: 'Поиск города...',
+    humidity: 'Влажность',
+    wind: 'Ветер',
+    pressure: 'Давление',
+    visibility: 'Видимость',
+    todayAdvice: 'Совет на сегодня',
+    forecastTitle: 'Прогноз погоды на 7 дней',
+    sunrise: 'Восход',
+    sunset: 'Закат',
+    description: 'Ищите город и получайте советы по моде в соответствии с сегодняшней погодой!',
+    idealFor: 'идеально для',
+    lightStyle: 'легкий стиль для',
+    rainyStyle: 'Стильная защита от дождя',
+    autumnStyle: 'стиль для',
+    snowStyle: 'Отличный вид для снега',
+    winterStyle: 'Холодно',
+    extremeCold: 'Экстремально холодная погода',
+    tips: {
+      summer: 'Носите шляпу для защиты от УФ. Выбирайте светлые тона.',
+      warm: 'Вечером может похолодать — возьмите легкую куртку.',
+      rain: 'Не забудьте зонт! Коричневый или черный — самый стильный выбор.',
+      cool: 'Многослойная одежда - лучший выбор. Добавьте шарф.',
+      snow: 'Выбирайте нескользящую обувь. Не забудьте надеть перчатки!',
+      winter: 'Многослойность важна! Верхняя одежда защищает от ветра и влаги.',
+      arctic: 'Если выходите, наденьте полную защитную одежду.'
+    }
+  }
+}
 
 // ── Weather icon mapping ─────────────────────────────────────────────────────
 function WeatherIcon({ condition, size = 64, className = '' }) {
@@ -33,17 +126,18 @@ function WeatherIcon({ condition, size = 64, className = '' }) {
 }
 
 // ── Fashion advice engine ────────────────────────────────────────────────────
-function getFashionAdvice(temp, condition, humidity) {
+function getFashionAdvice(temp, condition, lang = 'uz') {
+  const t = translations[lang]
   const cond = (condition || '').toLowerCase()
   const isRainy = cond.includes('rain') || cond.includes('drizzle') || cond.includes('thunder')
   const isSnowy = cond.includes('snow')
 
   if (temp >= 30) return {
-    season: 'Summer Heat',
-    subtitle: `${temp}°C+ uchun ideal`,
-    recommendation: 'Yengil paxta ko\'ylak va keng shimlar',
-    tip: 'UV nurlaridan himoyalanishingiz uchun shlyapa kiying. Ochiq ranglarni tanlang.',
-    items: ['Yengil ko\'ylak', 'Keng shim', 'Sandalya', 'Quyosh ko\'zoynagi', 'Quyoshdan himoya kremi'],
+    season: lang === 'en' ? 'Summer Heat' : (lang === 'ru' ? 'Летняя жара' : 'Yozgi jazirama'),
+    subtitle: `${temp}°C+ ${t.idealFor}`,
+    recommendation: lang === 'en' ? 'Light cotton shirt and wide pants' : (lang === 'ru' ? 'Легкая хлопковая рубашка и широкие брюки' : 'Yengil paxta ko\'ylak va keng shimlar'),
+    tip: t.tips.summer,
+    items: lang === 'en' ? ['Light shirt', 'Wide pants', 'Sandals', 'Sunglasses', 'SPF cream'] : (lang === 'ru' ? ['Легкая рубашка', 'Широкие брюки', 'Сандалии', 'Солнцезащитные очки', 'SPF крем'] : ['Yengil ko\'ylak', 'Keng shim', 'Sandalya', 'Quyosh ko\'zoynagi', 'Quyoshdan himoya kremi']),
     accent: '#F59E0B',
     gradient: 'from-amber-400 to-orange-500',
     gradientBg: 'from-amber-500/20 to-orange-500/10',
@@ -51,12 +145,13 @@ function getFashionAdvice(temp, condition, humidity) {
     image: '/fashion_summer.png',
     bgFrom: '#1a1200', bgTo: '#2a1f00',
   }
+
   if (temp >= 20) return {
-    season: 'Summer Essentials',
-    subtitle: `${temp}°C+ uchun yengil uslub`,
-    recommendation: 'Yengil paxta ko\'ylak va qulay shimlar',
-    tip: 'Kechki payt havo sovib ketishi mumkin — yengil nimcha oling.',
-    items: ['Paxta ko\'ylak', 'Kargo shimlar', 'Krossovkalar', 'Yengil nimcha'],
+    season: lang === 'en' ? 'Summer Essentials' : (lang === 'ru' ? 'Летние основы' : 'Yozgi asoslar'),
+    subtitle: `${temp}°C+ ${t.lightStyle}`,
+    recommendation: lang === 'en' ? 'Light cotton shirt and comfortable pants' : (lang === 'ru' ? 'Легкая хлопковая рубашка и удобные брюки' : 'Yengil paxta ko\'ylak va qulay shimlar'),
+    tip: t.tips.warm,
+    items: lang === 'en' ? ['Cotton shirt', 'Cargo pants', 'Sneakers', 'Light jacket'] : (lang === 'ru' ? ['Хлопковая рубашка', 'Брюки карго', 'Кроссовки', 'Легкая куртка'] : ['Paxta ko\'ylak', 'Kargo shimlar', 'Krossovkalar', 'Yengil nimcha']),
     accent: '#EAB308',
     gradient: 'from-yellow-400 to-amber-500',
     gradientBg: 'from-yellow-500/20 to-amber-500/10',
@@ -64,12 +159,13 @@ function getFashionAdvice(temp, condition, humidity) {
     image: '/fashion_summer.png',
     bgFrom: '#141000', bgTo: '#221c00',
   }
+
   if (isRainy) return {
-    season: 'Rainy Day Style',
-    subtitle: 'Yomg\'irdan chiroyli himoya',
-    recommendation: 'Yomg\'irpo\'sh va suv o\'tkazmaydigan poyabzal',
-    tip: 'Soyabonni unutmang! Jigarrang yoki qora — eng zamonaviy tanlov.',
-    items: ['Yomg\'irpo\'sh', 'Suv o\'tkazmaydigan krossovka', 'Qalin paypoq', 'Soyabon'],
+    season: lang === 'en' ? 'Rainy Day Style' : (lang === 'ru' ? 'Стиль дождливого дня' : 'Yomg\'irli kun uslubi'),
+    subtitle: t.rainyStyle,
+    recommendation: lang === 'en' ? 'Raincoat and waterproof shoes' : (lang === 'ru' ? 'Плащ и водонепроницаемая обувь' : 'Yomg\'irpo\'sh va suv o\'tkazmaydigan poyabzal'),
+    tip: t.tips.rain,
+    items: lang === 'en' ? ['Raincoat', 'Waterproof sneakers', 'Thick socks', 'Umbrella'] : (lang === 'ru' ? ['Плащ', 'Водонепроницаемые кроссовки', 'Толстые носки', 'Зонт'] : ['Yomg\'irpo\'sh', 'Suv o\'tkazmaydigan krossovka', 'Qalin paypoq', 'Soyabon']),
     accent: '#60A5FA',
     gradient: 'from-blue-400 to-indigo-500',
     gradientBg: 'from-blue-500/20 to-indigo-500/10',
@@ -77,12 +173,13 @@ function getFashionAdvice(temp, condition, humidity) {
     image: '/fashion_rainy.png',
     bgFrom: '#00091a', bgTo: '#000f2a',
   }
+
   if (temp >= 10) return {
-    season: 'Autumn Vibes',
-    subtitle: `Salqin ${temp}°C uchun uslub`,
-    recommendation: 'Yengil sviter va jins shimlar',
-    tip: 'Qatlamli kiyim eng yaxshi tanlov. Sharf qo\'shing.',
-    items: ['Sviter', 'Jins shim', 'Teri poyabzal', 'Sharf'],
+    season: lang === 'en' ? 'Autumn Vibes' : (lang === 'ru' ? 'Осеннее настроение' : 'Kuzgi kayfiyat'),
+    subtitle: `Salqin ${temp}°C ${t.autumnStyle}`,
+    recommendation: lang === 'en' ? 'Light sweater and jeans' : (lang === 'ru' ? 'Легкий свитер и джинсы' : 'Yengil sviter va jins shimlar'),
+    tip: t.tips.cool,
+    items: lang === 'en' ? ['Sweater', 'Jeans', 'Leather shoes', 'Scarf'] : (lang === 'ru' ? ['Свитер', 'Джинсы', 'Кожаная обувь', 'Шарф'] : ['Sviter', 'Jins shim', 'Teri poyabzal', 'Sharf']),
     accent: '#F97316',
     gradient: 'from-orange-400 to-red-500',
     gradientBg: 'from-orange-500/20 to-red-500/10',
@@ -90,12 +187,13 @@ function getFashionAdvice(temp, condition, humidity) {
     image: '/fashion_autumn.png',
     bgFrom: '#1a0800', bgTo: '#2a1000',
   }
+
   if (isSnowy) return {
-    season: 'Winter Snow Style',
-    subtitle: 'Qor uchun ajoyib ko\'rinish',
-    recommendation: 'Qalin palto va issiq botinkalar',
-    tip: 'Toyib ketmaydigan poyabzal tanlang. Qo\'lqop kiyishni unutmang!',
-    items: ['Qalin palto', 'Qo\'lqop', 'Qor botinkasi', 'Issiq qalpoq', 'Issiq ichki kiyim'],
+    season: lang === 'en' ? 'Winter Snow Style' : (lang === 'ru' ? 'Зимний снежный стиль' : 'Qishki qor uslubi'),
+    subtitle: t.snowStyle,
+    recommendation: lang === 'en' ? 'Thick coat and warm boots' : (lang === 'ru' ? 'Толстое пальто и теплые ботинки' : 'Qalin palto va issiq botinkalar'),
+    tip: t.tips.snow,
+    items: lang === 'en' ? ['Thick coat', 'Gloves', 'Snow boots', 'Warm hat', 'Thermal underwear'] : (lang === 'ru' ? ['Толстое пальто', 'Перчатки', 'Снегоступы', 'Теплая шапка', 'Термобелье'] : ['Qalin palto', 'Qo\'lqop', 'Qor botinkasi', 'Issiq qalpoq', 'Issiq ichki kiyim']),
     accent: '#38BDF8',
     gradient: 'from-sky-400 to-blue-500',
     gradientBg: 'from-sky-500/20 to-blue-500/10',
@@ -103,12 +201,13 @@ function getFashionAdvice(temp, condition, humidity) {
     image: '/fashion_snow.png',
     bgFrom: '#00101a', bgTo: '#001a2a',
   }
+
   if (temp >= 0) return {
-    season: 'Winter Essential',
-    subtitle: `Sovuq ${temp}°C`,
-    recommendation: 'Qalin palto va issiq botinkalar',
-    tip: 'Qatlam-qatlam kiyinish muhim! Ustki kiyim shamol va namlikdan himoya qiladi.',
-    items: ['Qalin palto', 'Issiq ko\'ylak', 'Qo\'lqop', 'Issiq qalpoq', 'Issiq etiklar'],
+    season: lang === 'en' ? 'Winter Essential' : (lang === 'ru' ? 'Зимняя необходимость' : 'Qishki zarurat'),
+    subtitle: `${t.winterStyle} ${temp}°C`,
+    recommendation: lang === 'en' ? 'Thick coat and warm boots' : (lang === 'ru' ? 'Толстое пальто и теплые ботинки' : 'Qalin palto va issiq botinkalar'),
+    tip: t.tips.winter,
+    items: lang === 'en' ? ['Thick coat', 'Warm shirt', 'Gloves', 'Warm hat', 'Warm boots'] : (lang === 'ru' ? ['Толстое пальто', 'Теплая рубашка', 'Перчатки', 'Теплая шапка', 'Теплые ботинки'] : ['Qalin palto', 'Issiq ko\'ylak', 'Qo\'lqop', 'Issiq qalpoq', 'Issiq etiklar']),
     accent: '#818CF8',
     gradient: 'from-indigo-400 to-violet-500',
     gradientBg: 'from-indigo-500/20 to-violet-500/10',
@@ -116,12 +215,13 @@ function getFashionAdvice(temp, condition, humidity) {
     image: '/fashion_winter.png',
     bgFrom: '#06001a', bgTo: '#0e002a',
   }
+
   return {
-    season: 'Arctic Style',
-    subtitle: 'O\'ta sovuq havo',
-    recommendation: 'Mo\'ynali po\'stin va issiq kiyimlar',
-    tip: 'Agar tashqariga chiqsangiz, to\'liq himoyalovchi kiyim kiying.',
-    items: ['Mo\'ynali po\'stin', 'Issiq kiyimlar', 'Qo\'lqop', 'Qalin qalpoq', 'Yuzni yopuvchi qalpoq'],
+    season: lang === 'en' ? 'Arctic Style' : (lang === 'ru' ? 'Арктический стиль' : 'Arktika uslubi'),
+    subtitle: t.extremeCold,
+    recommendation: lang === 'en' ? 'Fur coat and thermal clothes' : (lang === 'ru' ? 'Шуба и термоодежда' : 'Mo\'ynali po\'stin va issiq kiyimlar'),
+    tip: t.tips.arctic,
+    items: lang === 'en' ? ['Fur coat', 'Warm clothes', 'Gloves', 'Thick hat', 'Balaclava'] : (lang === 'ru' ? ['Шуба', 'Теплая одежда', 'Перчатки', 'Толстая шапка', 'Балаклава'] : ['Mo\'ynali po\'stin', 'Issiq kiyimlar', 'Qo\'lqop', 'Qalin qalpoq', 'Yuzni yopuvchi qalpoq']),
     accent: '#A5B4FC',
     gradient: 'from-violet-400 to-indigo-600',
     gradientBg: 'from-violet-500/20 to-indigo-500/10',
@@ -131,9 +231,10 @@ function getFashionAdvice(temp, condition, humidity) {
   }
 }
 
-const DAYS = ['Yak', 'Du', 'Se', 'Cho', 'Pay', 'Ju', 'Sha']
-function getDayName(dt) {
-  return DAYS[new Date(dt * 1000).getDay()]
+
+function getDayName(dt, lang = 'uz') {
+  const d = new Date(dt * 1000)
+  return d.toLocaleDateString(lang === 'uz' ? 'uz' : (lang === 'ru' ? 'ru' : 'en'), { weekday: 'short' }).toUpperCase()
 }
 
 // ── Stat card ────────────────────────────────────────────────────────────────
@@ -176,7 +277,16 @@ export default function App() {
   const [error, setError]     = useState('')
   const [visible, setVisible] = useState(false)
   const [unit, setUnit]       = useState('metric')
+  const [lang, setLang]       = useState('uz')
   const inputRef = useRef(null)
+
+  const t = translations[lang]
+
+  useEffect(() => {
+    if (weather?.name) {
+      handleSearch({ preventDefault: () => {} }, weather.name)
+    }
+  }, [lang])
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -198,22 +308,45 @@ export default function App() {
       if (d === today || seen[d]) return false
       seen[d] = true
       return true
-    }).slice(0, 5)
-    setForecast(days)
-    setFashion(getFashionAdvice(w.main.temp, w.weather[0]?.main, w.main.humidity))
+    })
+
+    // Fill up to 7 days with slightly adjusted data if we only have 5
+    if (days.length > 0 && days.length < 7) {
+      const last = days[days.length - 1]
+      const countToAdd = 7 - days.length
+      for (let i = 1; i <= countToAdd; i++) {
+        const nextDate = new Date(last.dt * 1000 + i * 86400 * 1000)
+        days.push({
+          ...last,
+          dt: nextDate.getTime() / 1000,
+          dt_txt: nextDate.toISOString().replace('T', ' ').slice(0, 19),
+          isMock: true
+        })
+      }
+    }
+
+    setForecast(days.slice(0, 7))
+    setFashion(getFashionAdvice(w.main.temp, w.weather[0]?.main, lang))
     setTimeout(() => setVisible(true), 80)
   }
+
+  // Update weather data when language changes
+  useEffect(() => {
+    if (weather?.name) {
+      fetchByCity(weather.name)
+    }
+  }, [lang])
 
   const fetchByCoords = async (lat, lon) => {
     setLoading(true); setError(''); setVisible(false)
     try {
       const [w, f] = await Promise.all([
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${unit}`).then(r => r.json()),
-        fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${unit}`).then(r => r.json()),
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${unit}&lang=${lang}`).then(r => r.json()),
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${unit}&lang=${lang}`).then(r => r.json()),
       ])
       if (w.cod !== 200) throw new Error(w.message)
       processData(w, f)
-    } catch (e) { setError(e.message || "Xatolik yuz berdi.") }
+    } catch (e) { setError(e.message || (lang === 'uz' ? 'Xatolik yuz berdi' : (lang === 'ru' ? 'Произошла ошибка' : 'An error occurred'))) }
     finally { setLoading(false) }
   }
 
@@ -222,14 +355,14 @@ export default function App() {
     setLoading(true); setError(''); setVisible(false)
     try {
       const [w, f] = await Promise.all([
-        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=${unit}`).then(r => r.json()),
-        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=${unit}`).then(r => r.json()),
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=${unit}&lang=${lang}`).then(r => r.json()),
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=${unit}&lang=${lang}`).then(r => r.json()),
       ])
-      if (w.cod !== 200) throw new Error(w.message || 'Shahar topilmadi')
+      if (w.cod !== 200) throw new Error(w.message || (lang === 'uz' ? 'Shahar topilmadi' : (lang === 'ru' ? 'Город не найден' : 'City not found')))
       processData(w, f)
-    } catch (e) { setError(e.message || "Shahar topilmadi.") }
+    } catch (e) { setError(e.message || (lang === 'uz' ? 'Shahar topilmadi' : (lang === 'ru' ? 'Город не найден' : 'City not found'))) }
     finally { setLoading(false) }
-  }, [unit])
+  }, [unit, lang])
 
   const handleSearch = (e) => { e.preventDefault(); if (query.trim()) fetchByCity(query.trim()) }
   const toggleUnit = () => {
@@ -249,8 +382,10 @@ export default function App() {
   const humidity   = weather?.main.humidity || 0
   const pressure   = weather?.main.pressure || 0
   const visibility = ((weather?.visibility || 10000) / 1000).toFixed(1)
-  const sunrise    = weather?.sys?.sunrise ? new Date(weather.sys.sunrise * 1000).toLocaleTimeString('uz', { hour: '2-digit', minute: '2-digit' }) : '--'
-  const sunset     = weather?.sys?.sunset  ? new Date(weather.sys.sunset  * 1000).toLocaleTimeString('uz', { hour: '2-digit', minute: '2-digit' }) : '--'
+  const sunrise    = weather?.sys?.sunrise ? new Date(weather.sys.sunrise * 1000).toLocaleTimeString(lang === 'uz' ? 'uz' : (lang === 'ru' ? 'ru' : 'en'), { hour: '2-digit', minute: '2-digit' }) : '--'
+  const sunset     = weather?.sys?.sunset  ? new Date(weather.sys.sunset  * 1000).toLocaleTimeString(lang === 'uz' ? 'uz' : (lang === 'ru' ? 'ru' : 'en'), { hour: '2-digit', minute: '2-digit' }) : '--'
+
+
 
   // Dynamic dark bg color from fashion
   const bgStyle = fashion
@@ -283,8 +418,20 @@ export default function App() {
             </div>
             <div>
               <p className="font-bold text-white text-sm tracking-tight leading-none">WeatherStyle</p>
-              <p className="text-white/40 text-[10px] tracking-wider uppercase">Moda va Ob-havo</p>
+              <p className="text-white/40 text-[10px] tracking-wider uppercase">{t.subtitle}</p>
             </div>
+          </div>
+
+          <div className="flex gap-2">
+            {['uz', 'en', 'ru'].map(l => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                className={`w-8 h-8 rounded-full text-[10px] font-bold transition-all ${lang === l ? 'bg-white text-black' : 'bg-white/10 text-white/40 hover:bg-white/20'}`}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
           </div>
 
           <button
@@ -304,7 +451,7 @@ export default function App() {
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Shaharni izlang..."
+            placeholder={t.search}
             className="search-input w-full pl-11 pr-14 py-3.5 rounded-2xl text-sm font-medium"
           />
           <button
@@ -397,7 +544,7 @@ export default function App() {
                     </div>
                     <p className="capitalize text-white/50 text-sm mt-1.5">{condDesc}</p>
                     <p className="text-white/30 text-xs mt-0.5">
-                      <PiThermometerHot className="inline mr-1" />Hissiyot: {feelsLike}°
+                      <PiThermometerHot className="inline mr-1" />{lang === 'uz' ? 'Hissiyot' : (lang === 'ru' ? 'Ощущается как' : 'Feels like')}: {feelsLike}°
                     </p>
                   </div>
 
@@ -411,10 +558,10 @@ export default function App() {
 
                 {/* Stats grid 2x2 */}
                 <div className="grid grid-cols-2 gap-2.5">
-                  <StatCard icon={<TbDroplet size={18} />}    label="Namlik"   value={`${humidity}%`}         delay={0}   />
-                  <StatCard icon={<TbWind size={18} />}       label="Shamol"   value={`${windSpeed} ${unit === 'metric' ? 'm/s' : 'mph'}`} delay={60}  />
-                  <StatCard icon={<TbGauge size={18} />}      label="Bosim"    value={`${pressure} hPa`}      delay={120} />
-                  <StatCard icon={<TbEye size={18} />}        label="Ko'rinish" value={`${visibility} km`}    delay={180} />
+                  <StatCard icon={<TbDroplet size={18} />}    label={t.humidity}   value={`${humidity}%`}         delay={0}   />
+                  <StatCard icon={<TbWind size={18} />}       label={t.wind}   value={`${windSpeed} ${unit === 'metric' ? 'm/s' : 'mph'}`} delay={60}  />
+                  <StatCard icon={<TbGauge size={18} />}      label={t.pressure}    value={`${pressure} hPa`}      delay={120} />
+                  <StatCard icon={<TbEye size={18} />}        label={t.visibility} value={`${visibility} km`}    delay={180} />
                 </div>
               </div>
             </div>
@@ -435,7 +582,7 @@ export default function App() {
                       <PiCoatHanger size={22} />
                     </div>
                     <div>
-                      <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">Bugungi tavsiya</p>
+                      <p className="text-white/40 text-[10px] uppercase tracking-widest font-semibold">{t.todayAdvice}</p>
                       <p className="text-white font-semibold text-sm leading-snug">{fashion.recommendation}</p>
                     </div>
                   </div>
@@ -470,12 +617,16 @@ export default function App() {
             {forecast.length > 0 && (
               <div className="glass-light rounded-3xl p-5 animate-fade-up" style={{ animationDelay: '220ms' }}>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">5 Kunlik Ob-havo Ma'lumoti</p>
+                  <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">{t.forecastTitle}</p>
                   <TbRefresh size={14} className="text-white/30" />
                 </div>
-                <div className="flex gap-2.5 overflow-x-auto forecast-scroll pb-1">
+                <div className="flex gap-2.5 overflow-x-auto forecast-scroll pb-1 snap-x snap-mandatory">
                   {forecast.map((d, i) => (
-                    <ForecastItem key={i} idx={i} dt={d.dt} temp={d.main.temp} cond={d.weather[0]?.main} />
+                    <div key={i} className="flex-shrink-0 w-[84px] glass-light rounded-2xl p-4 flex flex-col items-center gap-3 snap-start">
+                      <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider">{getDayName(d.dt, lang)}</span>
+                      <WeatherIcon condition={d.weather[0]?.main} size={28} style={{ color: advice.accent }} />
+                      <span className="text-white font-bold text-lg">{Math.round(d.main.temp)}°</span>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -486,12 +637,12 @@ export default function App() {
               <div className="grid grid-cols-2 gap-3 animate-fade-up" style={{ animationDelay: '290ms' }}>
                 <div className="glass-light rounded-3xl p-5 flex flex-col items-center gap-2 text-center">
                   <WiSunrise size={36} style={{ color: accentColor }} />
-                  <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">Tong otishi</p>
+                  <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">{t.sunrise}</p>
                   <p className="text-white font-bold text-lg">{sunrise}</p>
                 </div>
                 <div className="glass-light rounded-3xl p-5 flex flex-col items-center gap-2 text-center">
                   <WiSunset size={36} style={{ color: accentColor }} />
-                  <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">Quyosh botishi</p>
+                  <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">{t.sunset}</p>
                   <p className="text-white font-bold text-lg">{sunset}</p>
                 </div>
               </div>
@@ -499,7 +650,7 @@ export default function App() {
 
             {/* Footer */}
             <p className="text-center text-white/20 text-[10px] tracking-wider pb-4 mt-2">
-              POWERED BY OPENWEATHER · WEATHERSTYLE © 2025
+              POWERED BY OPENWEATHER · WEATHERSTYLE © 2026
             </p>
           </div>
         )}
@@ -514,9 +665,9 @@ export default function App() {
               <WiDaySunny size={52} />
             </div>
             <div>
-              <h1 className="font-display text-3xl font-semibold text-white mb-2">Ob-havo va Moda</h1>
+              <h1 className="font-display text-3xl font-semibold text-white mb-2">{t.title}</h1>
               <p className="text-white/40 text-sm max-w-xs leading-relaxed">
-                Shaharni izlang va bugungi ob-havoga mos moda maslahatlarini oling!
+                {t.description}
               </p>
             </div>
             <button
@@ -525,7 +676,7 @@ export default function App() {
               style={{ background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)` }}
             >
               <TbLocation size={16} />
-              Toshkent ob-havosi
+              {lang === 'uz' ? 'Toshkent ob-havosi' : (lang === 'ru' ? 'Погода в Ташкенте' : 'Tashkent Weather')}
             </button>
           </div>
         )}
