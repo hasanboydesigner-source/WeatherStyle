@@ -419,7 +419,7 @@ export default function App() {
               <WiDaySunny size={22} className="text-black" />
             </div>
             <div>
-              <p className="font-bold text-white text-sm tracking-tight leading-none">WeatherStyle v2.2</p>
+              <p className="font-bold text-white text-sm tracking-tight leading-none">WeatherStyle</p>
               <p className="text-white/40 text-[10px] tracking-wider uppercase">{t.subtitle}</p>
             </div>
 
